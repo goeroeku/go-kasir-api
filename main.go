@@ -6,21 +6,42 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
+
+	_ "kasir-api/docs"
+
+	httpSwagger "github.com/swaggo/http-swagger"
 )
+
+// @title Kasir API
+// @version 1.0
+// @description REST API untuk sistem kasir (Point of Sale)
+// @host localhost:8080
+// @BasePath /
 
 // Produk adalah struct untuk data produk
 type Produk struct {
-	ID    int    `json:"id"`
-	Nama  string `json:"nama"`
-	Harga int    `json:"harga"`
-	Stok  int    `json:"stok"`
+	ID    int    `json:"id" example:"1"`
+	Nama  string `json:"nama" example:"Kopi Susu"`
+	Harga int    `json:"harga" example:"15000"`
+	Stok  int    `json:"stok" example:"100"`
 }
 
 // Category adalah struct untuk data kategori
 type Category struct {
-	ID          int    `json:"id"`
-	Name        string `json:"name"`
-	Description string `json:"description"`
+	ID          int    `json:"id" example:"1"`
+	Name        string `json:"name" example:"Minuman"`
+	Description string `json:"description" example:"Berbagai jenis minuman"`
+}
+
+// MessageResponse adalah struct untuk response message
+type MessageResponse struct {
+	Message string `json:"message" example:"Operation successful"`
+}
+
+// HealthResponse adalah struct untuk health check response
+type HealthResponse struct {
+	Status  string `json:"status" example:"ok"`
+	Message string `json:"message" example:"Kasir API is running"`
 }
 
 // In-memory storage
@@ -29,7 +50,13 @@ var nextID = 1
 var categoryList []Category
 var nextCategoryID = 1
 
-// healthHandler - endpoint untuk cek kesehatan API
+// healthHandler godoc
+// @Summary Health check
+// @Description Mengecek apakah API berjalan dengan baik
+// @Tags Health
+// @Produce json
+// @Success 200 {object} HealthResponse
+// @Router /health [get]
 func healthHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
@@ -37,13 +64,19 @@ func healthHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(map[string]string{
-		"status":  "ok",
-		"message": "Kasir API is running",
+	json.NewEncoder(w).Encode(HealthResponse{
+		Status:  "ok",
+		Message: "Kasir API is running",
 	})
 }
 
-// getAllProdukHandler - mengambil semua produk
+// getAllProdukHandler godoc
+// @Summary Get all produk
+// @Description Mengambil semua daftar produk
+// @Tags Produk
+// @Produce json
+// @Success 200 {array} Produk
+// @Router /produk [get]
 func getAllProdukHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
@@ -54,7 +87,16 @@ func getAllProdukHandler(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(produkList)
 }
 
-// createProdukHandler - membuat produk baru
+// createProdukHandler godoc
+// @Summary Create produk
+// @Description Membuat produk baru
+// @Tags Produk
+// @Accept json
+// @Produce json
+// @Param produk body Produk true "Data produk"
+// @Success 201 {object} Produk
+// @Failure 400 {string} string "Invalid request body"
+// @Router /produk [post]
 func createProdukHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
@@ -76,14 +118,21 @@ func createProdukHandler(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(produk)
 }
 
-// getProdukByIDHandler - mengambil produk berdasarkan ID
+// getProdukByIDHandler godoc
+// @Summary Get produk by ID
+// @Description Mengambil produk berdasarkan ID
+// @Tags Produk
+// @Produce json
+// @Param id path int true "Produk ID"
+// @Success 200 {object} Produk
+// @Failure 404 {string} string "Produk tidak ditemukan"
+// @Router /produk/{id} [get]
 func getProdukByIDHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
 
-	// Ekstrak ID dari URL path
 	pathParts := strings.Split(r.URL.Path, "/")
 	if len(pathParts) < 3 {
 		http.Error(w, "Invalid URL", http.StatusBadRequest)
@@ -96,7 +145,6 @@ func getProdukByIDHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Cari produk berdasarkan ID
 	for _, produk := range produkList {
 		if produk.ID == id {
 			w.Header().Set("Content-Type", "application/json")
@@ -108,14 +156,23 @@ func getProdukByIDHandler(w http.ResponseWriter, r *http.Request) {
 	http.Error(w, "Produk tidak ditemukan", http.StatusNotFound)
 }
 
-// updateProdukHandler - mengupdate produk berdasarkan ID
+// updateProdukHandler godoc
+// @Summary Update produk
+// @Description Mengupdate produk berdasarkan ID
+// @Tags Produk
+// @Accept json
+// @Produce json
+// @Param id path int true "Produk ID"
+// @Param produk body Produk true "Data produk"
+// @Success 200 {object} Produk
+// @Failure 404 {string} string "Produk tidak ditemukan"
+// @Router /produk/{id} [put]
 func updateProdukHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPut {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
 
-	// Ekstrak ID dari URL path
 	pathParts := strings.Split(r.URL.Path, "/")
 	if len(pathParts) < 3 {
 		http.Error(w, "Invalid URL", http.StatusBadRequest)
@@ -134,7 +191,6 @@ func updateProdukHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Cari dan update produk
 	for i, produk := range produkList {
 		if produk.ID == id {
 			updatedProduk.ID = id
@@ -148,14 +204,21 @@ func updateProdukHandler(w http.ResponseWriter, r *http.Request) {
 	http.Error(w, "Produk tidak ditemukan", http.StatusNotFound)
 }
 
-// deleteProdukHandler - menghapus produk berdasarkan ID
+// deleteProdukHandler godoc
+// @Summary Delete produk
+// @Description Menghapus produk berdasarkan ID
+// @Tags Produk
+// @Produce json
+// @Param id path int true "Produk ID"
+// @Success 200 {object} MessageResponse
+// @Failure 404 {string} string "Produk tidak ditemukan"
+// @Router /produk/{id} [delete]
 func deleteProdukHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodDelete {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
 
-	// Ekstrak ID dari URL path
 	pathParts := strings.Split(r.URL.Path, "/")
 	if len(pathParts) < 3 {
 		http.Error(w, "Invalid URL", http.StatusBadRequest)
@@ -168,13 +231,12 @@ func deleteProdukHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Cari dan hapus produk
 	for i, produk := range produkList {
 		if produk.ID == id {
 			produkList = append(produkList[:i], produkList[i+1:]...)
 			w.Header().Set("Content-Type", "application/json")
-			json.NewEncoder(w).Encode(map[string]string{
-				"message": fmt.Sprintf("Produk dengan ID %d berhasil dihapus", id),
+			json.NewEncoder(w).Encode(MessageResponse{
+				Message: fmt.Sprintf("Produk dengan ID %d berhasil dihapus", id),
 			})
 			return
 		}
@@ -183,13 +245,10 @@ func deleteProdukHandler(w http.ResponseWriter, r *http.Request) {
 	http.Error(w, "Produk tidak ditemukan", http.StatusNotFound)
 }
 
-// produkHandler - handler untuk /produk endpoint dengan berbagai method
 func produkHandler(w http.ResponseWriter, r *http.Request) {
-	// Cek apakah ada ID di path
 	pathParts := strings.Split(r.URL.Path, "/")
 
 	if len(pathParts) == 2 || (len(pathParts) == 3 && pathParts[2] == "") {
-		// /produk - tanpa ID
 		switch r.Method {
 		case http.MethodGet:
 			getAllProdukHandler(w, r)
@@ -199,7 +258,6 @@ func produkHandler(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		}
 	} else {
-		// /produk/{id} - dengan ID
 		switch r.Method {
 		case http.MethodGet:
 			getProdukByIDHandler(w, r)
@@ -215,13 +273,28 @@ func produkHandler(w http.ResponseWriter, r *http.Request) {
 
 // ==================== CATEGORY HANDLERS ====================
 
-// getAllCategoriesHandler - mengambil semua kategori
+// getAllCategoriesHandler godoc
+// @Summary Get all categories
+// @Description Mengambil semua daftar kategori
+// @Tags Categories
+// @Produce json
+// @Success 200 {array} Category
+// @Router /categories [get]
 func getAllCategoriesHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(categoryList)
 }
 
-// createCategoryHandler - membuat kategori baru
+// createCategoryHandler godoc
+// @Summary Create category
+// @Description Membuat kategori baru
+// @Tags Categories
+// @Accept json
+// @Produce json
+// @Param category body Category true "Data kategori"
+// @Success 201 {object} Category
+// @Failure 400 {string} string "Invalid request body"
+// @Router /categories [post]
 func createCategoryHandler(w http.ResponseWriter, r *http.Request) {
 	var category Category
 	if err := json.NewDecoder(r.Body).Decode(&category); err != nil {
@@ -238,7 +311,15 @@ func createCategoryHandler(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(category)
 }
 
-// getCategoryByIDHandler - mengambil kategori berdasarkan ID
+// getCategoryByIDHandler godoc
+// @Summary Get category by ID
+// @Description Mengambil kategori berdasarkan ID
+// @Tags Categories
+// @Produce json
+// @Param id path int true "Category ID"
+// @Success 200 {object} Category
+// @Failure 404 {string} string "Category tidak ditemukan"
+// @Router /categories/{id} [get]
 func getCategoryByIDHandler(w http.ResponseWriter, r *http.Request) {
 	pathParts := strings.Split(r.URL.Path, "/")
 	if len(pathParts) < 3 {
@@ -263,7 +344,17 @@ func getCategoryByIDHandler(w http.ResponseWriter, r *http.Request) {
 	http.Error(w, "Category tidak ditemukan", http.StatusNotFound)
 }
 
-// updateCategoryHandler - mengupdate kategori berdasarkan ID
+// updateCategoryHandler godoc
+// @Summary Update category
+// @Description Mengupdate kategori berdasarkan ID
+// @Tags Categories
+// @Accept json
+// @Produce json
+// @Param id path int true "Category ID"
+// @Param category body Category true "Data kategori"
+// @Success 200 {object} Category
+// @Failure 404 {string} string "Category tidak ditemukan"
+// @Router /categories/{id} [put]
 func updateCategoryHandler(w http.ResponseWriter, r *http.Request) {
 	pathParts := strings.Split(r.URL.Path, "/")
 	if len(pathParts) < 3 {
@@ -296,7 +387,15 @@ func updateCategoryHandler(w http.ResponseWriter, r *http.Request) {
 	http.Error(w, "Category tidak ditemukan", http.StatusNotFound)
 }
 
-// deleteCategoryHandler - menghapus kategori berdasarkan ID
+// deleteCategoryHandler godoc
+// @Summary Delete category
+// @Description Menghapus kategori berdasarkan ID
+// @Tags Categories
+// @Produce json
+// @Param id path int true "Category ID"
+// @Success 200 {object} MessageResponse
+// @Failure 404 {string} string "Category tidak ditemukan"
+// @Router /categories/{id} [delete]
 func deleteCategoryHandler(w http.ResponseWriter, r *http.Request) {
 	pathParts := strings.Split(r.URL.Path, "/")
 	if len(pathParts) < 3 {
@@ -314,8 +413,8 @@ func deleteCategoryHandler(w http.ResponseWriter, r *http.Request) {
 		if category.ID == id {
 			categoryList = append(categoryList[:i], categoryList[i+1:]...)
 			w.Header().Set("Content-Type", "application/json")
-			json.NewEncoder(w).Encode(map[string]string{
-				"message": fmt.Sprintf("Category dengan ID %d berhasil dihapus", id),
+			json.NewEncoder(w).Encode(MessageResponse{
+				Message: fmt.Sprintf("Category dengan ID %d berhasil dihapus", id),
 			})
 			return
 		}
@@ -324,7 +423,6 @@ func deleteCategoryHandler(w http.ResponseWriter, r *http.Request) {
 	http.Error(w, "Category tidak ditemukan", http.StatusNotFound)
 }
 
-// categoryHandler - handler untuk /categories endpoint dengan berbagai method
 func categoryHandler(w http.ResponseWriter, r *http.Request) {
 	pathParts := strings.Split(r.URL.Path, "/")
 
@@ -374,9 +472,13 @@ func main() {
 	http.HandleFunc("/categories", categoryHandler)
 	http.HandleFunc("/categories/", categoryHandler)
 
+	// Swagger UI
+	http.HandleFunc("/swagger/", httpSwagger.WrapHandler)
+
 	// Start server
 	port := "8080"
 	fmt.Printf("🚀 Kasir API berjalan di http://localhost:%s\n", port)
+	fmt.Printf("📚 Swagger UI: http://localhost:%s/swagger/index.html\n", port)
 	fmt.Println("📋 Endpoints:")
 	fmt.Println("   GET  /health          - Health check")
 	fmt.Println("   -- Produk --")

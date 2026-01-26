@@ -1,0 +1,295 @@
+basePath: /
+definitions:
+  main.Category:
+    properties:
+      description:
+        example: Berbagai jenis minuman
+        type: string
+      id:
+        example: 1
+        type: integer
+      name:
+        example: Minuman
+        type: string
+    type: object
+  main.HealthResponse:
+    properties:
+      message:
+        example: Kasir API is running
+        type: string
+      status:
+        example: ok
+        type: string
+    type: object
+  main.MessageResponse:
+    properties:
+      message:
+        example: Operation successful
+        type: string
+    type: object
+  main.Produk:
+    properties:
+      harga:
+        example: 15000
+        type: integer
+      id:
+        example: 1
+        type: integer
+      nama:
+        example: Kopi Susu
+        type: string
+      stok:
+        example: 100
+        type: integer
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: REST API untuk sistem kasir (Point of Sale)
+  title: Kasir API
+  version: "1.0"
+paths:
+  /categories:
+    get:
+      description: Mengambil semua daftar kategori
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/main.Category'
+            type: array
+      summary: Get all categories
+      tags:
+      - Categories
+    post:
+      consumes:
+      - application/json
+      description: Membuat kategori baru
+      parameters:
+      - description: Data kategori
+        in: body
+        name: category
+        required: true
+        schema:
+          $ref: '#/definitions/main.Category'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/main.Category'
+        "400":
+          description: Invalid request body
+          schema:
+            type: string
+      summary: Create category
+      tags:
+      - Categories
+  /categories/{id}:
+    delete:
+      description: Menghapus kategori berdasarkan ID
+      parameters:
+      - description: Category ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.MessageResponse'
+        "404":
+          description: Category tidak ditemukan
+          schema:
+            type: string
+      summary: Delete category
+      tags:
+      - Categories
+    get:
+      description: Mengambil kategori berdasarkan ID
+      parameters:
+      - description: Category ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.Category'
+        "404":
+          description: Category tidak ditemukan
+          schema:
+            type: string
+      summary: Get category by ID
+      tags:
+      - Categories
+    put:
+      consumes:
+      - application/json
+      description: Mengupdate kategori berdasarkan ID
+      parameters:
+      - description: Category ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Data kategori
+        in: body
+        name: category
+        required: true
+        schema:
+          $ref: '#/definitions/main.Category'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.Category'
+        "404":
+          description: Category tidak ditemukan
+          schema:
+            type: string
+      summary: Update category
+      tags:
+      - Categories
+  /health:
+    get:
+      description: Mengecek apakah API berjalan dengan baik
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.HealthResponse'
+      summary: Health check
+      tags:
+      - Health
+  /produk:
+    get:
+      description: Mengambil semua daftar produk
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/main.Produk'
+            type: array
+      summary: Get all produk
+      tags:
+      - Produk
+    post:
+      consumes:
+      - application/json
+      description: Membuat produk baru
+      parameters:
+      - description: Data produk
+        in: body
+        name: produk
+        required: true
+        schema:
+          $ref: '#/definitions/main.Produk'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/main.Produk'
+        "400":
+          description: Invalid request body
+          schema:
+            type: string
+      summary: Create produk
+      tags:
+      - Produk
+  /produk/{id}:
+    delete:
+      description: Menghapus produk berdasarkan ID
+      parameters:
+      - description: Produk ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.MessageResponse'
+        "404":
+          description: Produk tidak ditemukan
+          schema:
+            type: string
+      summary: Delete produk
+      tags:
+      - Produk
+    get:
+      description: Mengambil produk berdasarkan ID
+      parameters:
+      - description: Produk ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.Produk'
+        "404":
+          description: Produk tidak ditemukan
+          schema:
+            type: string
+      summary: Get produk by ID
+      tags:
+      - Produk
+    put:
+      consumes:
+      - application/json
+      description: Mengupdate produk berdasarkan ID
+      parameters:
+      - description: Produk ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Data produk
+        in: body
+        name: produk
+        required: true
+        schema:
+          $ref: '#/definitions/main.Produk'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.Produk'
+        "404":
+          description: Produk tidak ditemukan
+          schema:
+            type: string
+      summary: Update produk
+      tags:
+      - Produk
+swagger: "2.0"
