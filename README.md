@@ -6,6 +6,7 @@ REST API sederhana untuk sistem kasir (Point of Sale) menggunakan Go standard li
 
 - **Bahasa**: Go (Golang)
 - **Library**: Standard Library (`net/http`, `encoding/json`)
+- **Documentation**: Swagger (swaggo/swag)
 - **Storage**: In-Memory (slice)
 
 ## 🚀 Quick Start
@@ -24,6 +25,12 @@ go build -o kasir-api main.go
 ```
 
 Server akan berjalan di `http://localhost:8080`
+
+## 📚 API Documentation (Swagger)
+
+Swagger UI tersedia di: `http://localhost:8080/swagger/index.html`
+
+![Swagger UI](docs/swagger-ui.png)
 
 ## 📋 API Endpoints
 
@@ -108,8 +115,13 @@ curl -X DELETE http://localhost:8080/produk/1
 
 ```
 kasir-api/
+├── docs/
+│   ├── docs.go        # Swagger generated docs
+│   ├── swagger.json
+│   └── swagger.yaml
 ├── .gitignore
 ├── go.mod
+├── go.sum
 ├── main.go
 └── README.md
 ```
