@@ -42,6 +42,25 @@ definitions:
         example: 100
         type: integer
     type: object
+  main.WelcomeResponse:
+    properties:
+      description:
+        example: REST API untuk sistem kasir
+        type: string
+      docs:
+        example: /swagger/index.html
+        type: string
+      endpoints:
+        items:
+          type: string
+        type: array
+      name:
+        example: Kasir API
+        type: string
+      version:
+        example: 1.0.0
+        type: string
+    type: object
 host: localhost:8080
 info:
   contact: {}
@@ -49,6 +68,19 @@ info:
   title: Kasir API
   version: "1.0"
 paths:
+  /:
+    get:
+      description: Menampilkan informasi welcome dan daftar endpoint
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.WelcomeResponse'
+      summary: Welcome
+      tags:
+      - Info
   /categories:
     get:
       description: Mengambil semua daftar kategori

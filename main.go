@@ -50,6 +50,50 @@ var nextID = 1
 var categoryList []Category
 var nextCategoryID = 1
 
+// WelcomeResponse adalah struct untuk response welcome
+type WelcomeResponse struct {
+	Name        string   `json:"name" example:"Kasir API"`
+	Version     string   `json:"version" example:"1.0.0"`
+	Description string   `json:"description" example:"REST API untuk sistem kasir"`
+	Docs        string   `json:"docs" example:"/swagger/index.html"`
+	Endpoints   []string `json:"endpoints"`
+}
+
+// welcomeHandler godoc
+// @Summary Welcome
+// @Description Menampilkan informasi welcome dan daftar endpoint
+// @Tags Info
+// @Produce json
+// @Success 200 {object} WelcomeResponse
+// @Router / [get]
+func welcomeHandler(w http.ResponseWriter, r *http.Request) {
+	if r.URL.Path != "/" {
+		http.NotFound(w, r)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(WelcomeResponse{
+		Name:        "Kasir API",
+		Version:     "1.0.0",
+		Description: "REST API untuk sistem kasir (Point of Sale)",
+		Docs:        "/swagger/index.html",
+		Endpoints: []string{
+			"GET  /health     - Health check",
+			"GET  /produk     - Get all produk",
+			"POST /produk     - Create produk",
+			"GET  /produk/:id - Get produk by ID",
+			"PUT  /produk/:id - Update produk",
+			"DELETE /produk/:id - Delete produk",
+			"GET  /categories     - Get all categories",
+			"POST /categories     - Create category",
+			"GET  /categories/:id - Get category by ID",
+			"PUT  /categories/:id - Update category",
+			"DELETE /categories/:id - Delete category",
+		},
+	})
+}
+
 // healthHandler godoc
 // @Summary Health check
 // @Description Mengecek apakah API berjalan dengan baik
@@ -466,6 +510,7 @@ func main() {
 	nextCategoryID = 3
 
 	// Setup routing
+	http.HandleFunc("/", welcomeHandler)
 	http.HandleFunc("/health", healthHandler)
 	http.HandleFunc("/produk", produkHandler)
 	http.HandleFunc("/produk/", produkHandler)
