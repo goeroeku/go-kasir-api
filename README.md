@@ -1,43 +1,94 @@
 # Kasir API
 
-REST API sederhana untuk sistem kasir (Point of Sale) menggunakan Go standard library.
+REST API untuk sistem kasir (Point of Sale) menggunakan Go dengan Layered Architecture.
 
 ## 🛠️ Tech Stack
 
-- **Bahasa**: Go (Golang)
-- **Library**: Standard Library (`net/http`, `encoding/json`)
+- **Bahasa**: Go (Golang) 1.24+
+- **Database**: PostgreSQL (Supabase)
+- **Driver**: pgx/v5
+- **Config**: Viper
 - **Documentation**: Swagger (swaggo/swag)
-- **Storage**: In-Memory (slice)
+- **Architecture**: Layered (Handler → Service → Repository)
+
+## 📁 Project Structure
+
+```
+kasir-api/
+├── config/
+│   └── config.go          # Configuration management (Viper)
+├── database/
+│   └── database.go        # Database connection (PostgreSQL)
+├── handlers/
+│   ├── category_handler.go
+│   └── product_handler.go # HTTP handlers
+├── services/
+│   ├── category_service.go
+│   └── product_service.go # Business logic
+├── repositories/
+│   ├── category_repository.go
+│   └── product_repository.go # Database operations
+├── models/
+│   ├── category.go
+│   └── product.go         # Data models
+├── docs/
+│   ├── docs.go
+│   ├── swagger.json
+│   └── swagger.yaml       # Swagger documentation
+├── .env.example           # Environment template
+├── .gitignore
+├── go.mod
+├── go.sum
+├── main.go                # Application entry point
+└── README.md
+```
 
 ## 🚀 Quick Start
+
+### Prerequisites
+- Go 1.24+
+- PostgreSQL database (or Supabase)
+
+### Setup
 
 ```bash
 # Clone repository
 git clone <repository-url>
 cd kasir-api
 
+# Copy environment template
+cp .env.example .env
+
+# Edit .env with your database credentials
+# DB_CONN=postgresql://user:password@host:port/database?sslmode=require
+
+# Install dependencies
+go mod tidy
+
 # Run server
 go run main.go
-
-# Build binary
-go build -o kasir-api main.go
-./kasir-api
 ```
 
 Server akan berjalan di `http://localhost:8080`
 
+## ⚙️ Environment Variables
+
+| Variable | Description | Example |
+|----------|-------------|---------|
+| `PORT` | Server port | `8080` |
+| `DB_CONN` | PostgreSQL connection string | `postgresql://user:pass@host:5432/db?sslmode=require` |
+
 ## 📚 API Documentation (Swagger)
 
-Swagger UI tersedia di: `http://localhost:8080/swagger/index.html`
-
-![Swagger UI](docs/swagger-ui.png)
+Swagger UI: `http://localhost:8080/swagger/index.html`
 
 ## 📋 API Endpoints
 
 ### Health Check
 | Method | Endpoint | Deskripsi |
 |--------|----------|-----------|
-| GET | `/health` | Cek status API |
+| GET | `/` | API info |
+| GET | `/health` | Health check |
 
 ### Produk
 | Method | Endpoint | Deskripsi |
@@ -63,7 +114,7 @@ Swagger UI tersedia di: `http://localhost:8080/swagger/index.html`
 ```bash
 curl -X POST http://localhost:8080/produk \
   -H "Content-Type: application/json" \
-  -d '{"nama":"Kopi Susu","harga":15000,"stok":100}'
+  -d '{"nama":"Kopi Susu","harga":15000,"stok":100,"category_id":1}'
 ```
 
 ### Create Category
@@ -73,59 +124,39 @@ curl -X POST http://localhost:8080/categories \
   -d '{"name":"Minuman","description":"Berbagai jenis minuman"}'
 ```
 
-### Get All Produk
-```bash
-curl http://localhost:8080/produk
-```
-
-### Update Produk
-```bash
-curl -X PUT http://localhost:8080/produk/1 \
-  -H "Content-Type: application/json" \
-  -d '{"nama":"Kopi Susu Gula Aren","harga":18000,"stok":90}'
-```
-
-### Delete Produk
-```bash
-curl -X DELETE http://localhost:8080/produk/1
-```
-
-## 📦 Data Models
-
-### Produk
-```json
-{
-  "id": 1,
-  "nama": "Kopi Susu",
-  "harga": 15000,
-  "stok": 100
-}
-```
-
-### Category
-```json
-{
-  "id": 1,
-  "name": "Minuman",
-  "description": "Berbagai jenis minuman"
-}
-```
-
-## 📁 Project Structure
+## 🏗️ Architecture
 
 ```
-kasir-api/
-├── docs/
-│   ├── docs.go        # Swagger generated docs
-│   ├── swagger.json
-│   └── swagger.yaml
-├── .gitignore
-├── go.mod
-├── go.sum
-├── main.go
-└── README.md
+┌─────────────┐
+│   Client    │
+└──────┬──────┘
+       │ HTTP
+┌──────▼──────┐
+│  Handlers   │  ← HTTP routing & request/response
+└──────┬──────┘
+       │
+┌──────▼──────┐
+│  Services   │  ← Business logic
+└──────┬──────┘
+       │
+┌──────▼──────┐
+│ Repositories│  ← Database operations
+└──────┬──────┘
+       │
+┌──────▼──────┐
+│  Database   │  ← PostgreSQL
+└─────────────┘
 ```
 
 ## 🔗 Deployment
 
-Deploy ke Zeabur atau Railway untuk hosting gratis.
+Deploy ke Railway atau platform lain yang mendukung Go.
+
+### Railway
+1. Connect repository ke Railway
+2. Set environment variables (`PORT`, `DB_CONN`)
+3. Deploy otomatis
+
+## 📄 License
+
+MIT License
