@@ -5,7 +5,7 @@ import (
 	"log"
 	"time"
 
-	_ "github.com/lib/pq"
+	_ "github.com/jackc/pgx/v5/stdlib"
 
 	"kasir-api/config"
 )
@@ -20,7 +20,7 @@ func InitDB() {
 		return
 	}
 
-	DB, err = sql.Open("postgres", config.AppConfig.DBConn)
+	DB, err = sql.Open("pgx", config.AppConfig.DBConn)
 	if err != nil {
 		log.Fatalf("Failed to open database connection: %v", err)
 	}
