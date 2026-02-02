@@ -1,72 +1,69 @@
 basePath: /
 definitions:
-  main.Category:
-    properties:
-      description:
-        example: Berbagai jenis minuman
-        type: string
-      id:
-        example: 1
-        type: integer
-      name:
-        example: Minuman
-        type: string
-    type: object
   main.HealthResponse:
     properties:
       message:
-        example: Kasir API is running
         type: string
       status:
-        example: ok
         type: string
-    type: object
-  main.MessageResponse:
-    properties:
-      message:
-        example: Operation successful
-        type: string
-    type: object
-  main.Produk:
-    properties:
-      harga:
-        example: 15000
-        type: integer
-      id:
-        example: 1
-        type: integer
-      nama:
-        example: Kopi Susu
-        type: string
-      stok:
-        example: 100
-        type: integer
     type: object
   main.WelcomeResponse:
     properties:
       description:
-        example: REST API untuk sistem kasir
         type: string
       docs:
-        example: /swagger/index.html
         type: string
       endpoints:
         items:
           type: string
         type: array
       name:
-        example: Kasir API
         type: string
       version:
-        example: 1.0.0
         type: string
+    type: object
+  models.Category:
+    properties:
+      description:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+    type: object
+  models.CategoryRequest:
+    properties:
+      description:
+        type: string
+      name:
+        type: string
+    type: object
+  models.Product:
+    properties:
+      harga:
+        type: integer
+      id:
+        type: integer
+      nama:
+        type: string
+      stok:
+        type: integer
+    type: object
+  models.ProductRequest:
+    properties:
+      harga:
+        type: integer
+      nama:
+        type: string
+      stok:
+        type: integer
     type: object
 host: localhost:8080
 info:
   contact: {}
-  description: REST API untuk sistem kasir (Point of Sale)
+  description: REST API untuk sistem kasir (Point of Sale) dengan Layered Architecture
   title: Kasir API
-  version: "1.0"
+  version: "2.0"
 paths:
   /:
     get:
@@ -91,7 +88,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/main.Category'
+              $ref: '#/definitions/models.Category'
             type: array
       summary: Get all categories
       tags:
@@ -106,18 +103,14 @@ paths:
         name: category
         required: true
         schema:
-          $ref: '#/definitions/main.Category'
+          $ref: '#/definitions/models.CategoryRequest'
       produces:
       - application/json
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/main.Category'
-        "400":
-          description: Invalid request body
-          schema:
-            type: string
+            $ref: '#/definitions/models.Category'
       summary: Create category
       tags:
       - Categories
@@ -136,11 +129,9 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/main.MessageResponse'
-        "404":
-          description: Category tidak ditemukan
-          schema:
-            type: string
+            additionalProperties:
+              type: string
+            type: object
       summary: Delete category
       tags:
       - Categories
@@ -158,7 +149,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/main.Category'
+            $ref: '#/definitions/models.Category'
         "404":
           description: Category tidak ditemukan
           schema:
@@ -181,18 +172,14 @@ paths:
         name: category
         required: true
         schema:
-          $ref: '#/definitions/main.Category'
+          $ref: '#/definitions/models.CategoryRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/main.Category'
-        "404":
-          description: Category tidak ditemukan
-          schema:
-            type: string
+            $ref: '#/definitions/models.Category'
       summary: Update category
       tags:
       - Categories
@@ -219,7 +206,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/main.Produk'
+              $ref: '#/definitions/models.Product'
             type: array
       summary: Get all produk
       tags:
@@ -234,18 +221,14 @@ paths:
         name: produk
         required: true
         schema:
-          $ref: '#/definitions/main.Produk'
+          $ref: '#/definitions/models.ProductRequest'
       produces:
       - application/json
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/main.Produk'
-        "400":
-          description: Invalid request body
-          schema:
-            type: string
+            $ref: '#/definitions/models.Product'
       summary: Create produk
       tags:
       - Produk
@@ -264,11 +247,9 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/main.MessageResponse'
-        "404":
-          description: Produk tidak ditemukan
-          schema:
-            type: string
+            additionalProperties:
+              type: string
+            type: object
       summary: Delete produk
       tags:
       - Produk
@@ -286,7 +267,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/main.Produk'
+            $ref: '#/definitions/models.Product'
         "404":
           description: Produk tidak ditemukan
           schema:
@@ -309,18 +290,14 @@ paths:
         name: produk
         required: true
         schema:
-          $ref: '#/definitions/main.Produk'
+          $ref: '#/definitions/models.ProductRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/main.Produk'
-        "404":
-          description: Produk tidak ditemukan
-          schema:
-            type: string
+            $ref: '#/definitions/models.Product'
       summary: Update produk
       tags:
       - Produk

@@ -51,7 +51,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/main.Category"
+                                "$ref": "#/definitions/models.Category"
                             }
                         }
                     }
@@ -76,7 +76,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/main.Category"
+                            "$ref": "#/definitions/models.CategoryRequest"
                         }
                     }
                 ],
@@ -84,13 +84,7 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/main.Category"
-                        }
-                    },
-                    "400": {
-                        "description": "Invalid request body",
-                        "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/models.Category"
                         }
                     }
                 }
@@ -119,7 +113,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/main.Category"
+                            "$ref": "#/definitions/models.Category"
                         }
                     },
                     "404": {
@@ -156,7 +150,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/main.Category"
+                            "$ref": "#/definitions/models.CategoryRequest"
                         }
                     }
                 ],
@@ -164,13 +158,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/main.Category"
-                        }
-                    },
-                    "404": {
-                        "description": "Category tidak ditemukan",
-                        "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/models.Category"
                         }
                     }
                 }
@@ -197,13 +185,10 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/main.MessageResponse"
-                        }
-                    },
-                    "404": {
-                        "description": "Category tidak ditemukan",
-                        "schema": {
-                            "type": "string"
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
                         }
                     }
                 }
@@ -245,7 +230,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/main.Produk"
+                                "$ref": "#/definitions/models.Product"
                             }
                         }
                     }
@@ -270,7 +255,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/main.Produk"
+                            "$ref": "#/definitions/models.ProductRequest"
                         }
                     }
                 ],
@@ -278,13 +263,7 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/main.Produk"
-                        }
-                    },
-                    "400": {
-                        "description": "Invalid request body",
-                        "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/models.Product"
                         }
                     }
                 }
@@ -313,7 +292,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/main.Produk"
+                            "$ref": "#/definitions/models.Product"
                         }
                     },
                     "404": {
@@ -350,7 +329,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/main.Produk"
+                            "$ref": "#/definitions/models.ProductRequest"
                         }
                     }
                 ],
@@ -358,13 +337,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/main.Produk"
-                        }
-                    },
-                    "404": {
-                        "description": "Produk tidak ditemukan",
-                        "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/models.Product"
                         }
                     }
                 }
@@ -391,13 +364,10 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/main.MessageResponse"
-                        }
-                    },
-                    "404": {
-                        "description": "Produk tidak ditemukan",
-                        "schema": {
-                            "type": "string"
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
                         }
                     }
                 }
@@ -405,63 +375,14 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "main.Category": {
-            "type": "object",
-            "properties": {
-                "description": {
-                    "type": "string",
-                    "example": "Berbagai jenis minuman"
-                },
-                "id": {
-                    "type": "integer",
-                    "example": 1
-                },
-                "name": {
-                    "type": "string",
-                    "example": "Minuman"
-                }
-            }
-        },
         "main.HealthResponse": {
             "type": "object",
             "properties": {
                 "message": {
-                    "type": "string",
-                    "example": "Kasir API is running"
+                    "type": "string"
                 },
                 "status": {
-                    "type": "string",
-                    "example": "ok"
-                }
-            }
-        },
-        "main.MessageResponse": {
-            "type": "object",
-            "properties": {
-                "message": {
-                    "type": "string",
-                    "example": "Operation successful"
-                }
-            }
-        },
-        "main.Produk": {
-            "type": "object",
-            "properties": {
-                "harga": {
-                    "type": "integer",
-                    "example": 15000
-                },
-                "id": {
-                    "type": "integer",
-                    "example": 1
-                },
-                "nama": {
-                    "type": "string",
-                    "example": "Kopi Susu"
-                },
-                "stok": {
-                    "type": "integer",
-                    "example": 100
+                    "type": "string"
                 }
             }
         },
@@ -469,12 +390,10 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "description": {
-                    "type": "string",
-                    "example": "REST API untuk sistem kasir"
+                    "type": "string"
                 },
                 "docs": {
-                    "type": "string",
-                    "example": "/swagger/index.html"
+                    "type": "string"
                 },
                 "endpoints": {
                     "type": "array",
@@ -483,12 +402,66 @@ const docTemplate = `{
                     }
                 },
                 "name": {
-                    "type": "string",
-                    "example": "Kasir API"
+                    "type": "string"
                 },
                 "version": {
-                    "type": "string",
-                    "example": "1.0.0"
+                    "type": "string"
+                }
+            }
+        },
+        "models.Category": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.CategoryRequest": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.Product": {
+            "type": "object",
+            "properties": {
+                "harga": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "nama": {
+                    "type": "string"
+                },
+                "stok": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.ProductRequest": {
+            "type": "object",
+            "properties": {
+                "harga": {
+                    "type": "integer"
+                },
+                "nama": {
+                    "type": "string"
+                },
+                "stok": {
+                    "type": "integer"
                 }
             }
         }
@@ -497,12 +470,12 @@ const docTemplate = `{
 
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
-	Version:          "1.0",
+	Version:          "2.0",
 	Host:             "localhost:8080",
 	BasePath:         "/",
 	Schemes:          []string{},
 	Title:            "Kasir API",
-	Description:      "REST API untuk sistem kasir (Point of Sale)",
+	Description:      "REST API untuk sistem kasir (Point of Sale) dengan Layered Architecture",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 	LeftDelim:        "{{",
