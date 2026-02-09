@@ -164,9 +164,9 @@ func setupDemoRoutes() {
 func demoProductHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode([]map[string]interface{}{
-		{"id": 1, "nama": "Kopi Susu", "harga": 15000, "stok": 100},
-		{"id": 2, "nama": "Teh Manis", "harga": 8000, "stok": 150},
-		{"id": 3, "nama": "Roti Bakar", "harga": 12000, "stok": 50},
+		{"id": 1, "nama": "Kopi Susu", "harga": 15000, "stok": 100, "category_id": 1},
+		{"id": 2, "nama": "Teh Manis", "harga": 8000, "stok": 150, "category_id": 1},
+		{"id": 3, "nama": "Roti Bakar", "harga": 12000, "stok": 50, "category_id": 2},
 	})
 }
 
