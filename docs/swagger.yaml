@@ -22,6 +22,15 @@ definitions:
       version:
         type: string
     type: object
+  models.BestSeller:
+    properties:
+      product_id:
+        type: integer
+      product_name:
+        type: string
+      quantity:
+        type: integer
+    type: object
   models.Category:
     properties:
       description:
@@ -37,6 +46,20 @@ definitions:
         type: string
       name:
         type: string
+    type: object
+  models.CheckoutItem:
+    properties:
+      product_id:
+        type: integer
+      quantity:
+        type: integer
+    type: object
+  models.CheckoutRequest:
+    properties:
+      items:
+        items:
+          $ref: '#/definitions/models.CheckoutItem'
+        type: array
     type: object
   models.Product:
     properties:
@@ -62,6 +85,43 @@ definitions:
       price:
         type: integer
       stock:
+        type: integer
+    type: object
+  models.SalesReport:
+    properties:
+      best_seller:
+        $ref: '#/definitions/models.BestSeller'
+      total_revenue:
+        type: integer
+      total_transactions:
+        type: integer
+    type: object
+  models.Transaction:
+    properties:
+      created_at:
+        type: string
+      details:
+        items:
+          $ref: '#/definitions/models.TransactionDetail'
+        type: array
+      id:
+        type: integer
+      total_amount:
+        type: integer
+    type: object
+  models.TransactionDetail:
+    properties:
+      id:
+        type: integer
+      product_id:
+        type: integer
+      product_name:
+        type: string
+      quantity:
+        type: integer
+      subtotal:
+        type: integer
+      transaction_id:
         type: integer
     type: object
 host: localhost:8080
@@ -204,7 +264,12 @@ paths:
       - Health
   /products:
     get:
-      description: Get all products from the database
+      description: Get all products from the database, optionally filtered by name
+      parameters:
+      - description: Search by product name
+        in: query
+        name: name
+        type: string
       produces:
       - application/json
       responses:
@@ -307,4 +372,63 @@ paths:
       summary: Update product
       tags:
       - Products
+  /reports:
+    get:
+      description: Get sales report filtered by start_date and end_date (YYYY-MM-DD)
+      parameters:
+      - description: Start Date (YYYY-MM-DD)
+        in: query
+        name: start_date
+        required: true
+        type: string
+      - description: End Date (YYYY-MM-DD)
+        in: query
+        name: end_date
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.SalesReport'
+      summary: Get sales report with custom date range
+      tags:
+      - Reports
+  /reports/today:
+    get:
+      description: Get total revenue, total transactions, and best seller for today
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.SalesReport'
+      summary: Get sales report for today
+      tags:
+      - Reports
+  /transactions:
+    post:
+      consumes:
+      - application/json
+      description: Create a new transaction with multiple items
+      parameters:
+      - description: Checkout data
+        in: body
+        name: checkout
+        required: true
+        schema:
+          $ref: '#/definitions/models.CheckoutRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Transaction'
+      summary: Create transaction (checkout)
+      tags:
+      - Transactions
 swagger: "2.0"

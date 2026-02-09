@@ -13,8 +13,20 @@ func NewProductRepository(db *sql.DB) *ProductRepository {
 	return &ProductRepository{db: db}
 }
 
-func (r *ProductRepository) GetAll() ([]models.Product, error) {
-	rows, err := r.db.Query("SELECT id, name, price, stock, category_id FROM products ORDER BY id")
+func (r *ProductRepository) GetAll(name string) ([]models.Product, error) {
+	var rows *sql.Rows
+	var err error
+
+	if name != "" {
+		// Search with ILIKE for case-insensitive matching
+		rows, err = r.db.Query(
+			"SELECT id, name, price, stock, category_id FROM products WHERE name ILIKE $1 ORDER BY id",
+			"%"+name+"%",
+		)
+	} else {
+		rows, err = r.db.Query("SELECT id, name, price, stock, category_id FROM products ORDER BY id")
+	}
+
 	if err != nil {
 		return nil, err
 	}

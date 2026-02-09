@@ -21,13 +21,17 @@ func NewProductHandler(service *services.ProductService) *ProductHandler {
 
 // GetAll godoc
 // @Summary Get all products
-// @Description Get all products from the database
+// @Description Get all products from the database, optionally filtered by name
 // @Tags Products
 // @Produce json
+// @Param name query string false "Search by product name"
 // @Success 200 {array} models.Product
 // @Router /products [get]
 func (h *ProductHandler) GetAll(w http.ResponseWriter, r *http.Request) {
-	products, err := h.service.GetAll()
+	// Get optional name query parameter
+	name := r.URL.Query().Get("name")
+
+	products, err := h.service.GetAll(name)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

@@ -131,22 +131,39 @@ func setupDatabaseRoutes() {
 	// Initialize repositories
 	productRepo := repositories.NewProductRepository(database.DB)
 	categoryRepo := repositories.NewCategoryRepository(database.DB)
+	transactionRepo := repositories.NewTransactionRepository(database.DB)
+	reportRepo := repositories.NewReportRepository(database.DB)
 
 	// Initialize services
 	productService := services.NewProductService(productRepo)
 	categoryService := services.NewCategoryService(categoryRepo)
+	transactionService := services.NewTransactionService(transactionRepo)
+	reportService := services.NewReportService(reportRepo)
 
 	// Initialize handlers
 	productHandler := handlers.NewProductHandler(productService)
 	categoryHandler := handlers.NewCategoryHandler(categoryService)
+	transactionHandler := handlers.NewTransactionHandler(transactionService)
+	reportHandler := handlers.NewReportHandler(reportService)
 
 	// Setup routing
 	http.HandleFunc("/", welcomeHandler)
 	http.HandleFunc("/health", healthHandler)
+
+	// Product Routes
 	http.HandleFunc("/products", productHandler.Handler)
 	http.HandleFunc("/products/", productHandler.Handler)
+
+	// Category Routes
 	http.HandleFunc("/categories", categoryHandler.Handler)
 	http.HandleFunc("/categories/", categoryHandler.Handler)
+
+	// Transaction Routes
+	http.HandleFunc("/transactions", transactionHandler.Handler)
+
+	// Report Routes
+	http.HandleFunc("/reports/today", reportHandler.GetReportToday)
+	http.HandleFunc("/reports", reportHandler.GetReportCustom)
 }
 
 func setupDemoRoutes() {
