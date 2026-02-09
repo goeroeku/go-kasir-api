@@ -19,7 +19,7 @@ import (
 
 // @title Kasir API
 // @version 2.0
-// @description REST API untuk sistem kasir (Point of Sale) dengan Layered Architecture
+// @description REST API for Point of Sale (POS) system with Layered Architecture
 // @host localhost:8080
 // @BasePath /
 
@@ -40,7 +40,7 @@ type HealthResponse struct {
 
 // welcomeHandler godoc
 // @Summary Welcome
-// @Description Menampilkan informasi welcome dan daftar endpoint
+// @Description Display welcome information and endpoint list
 // @Tags Info
 // @Produce json
 // @Success 200 {object} WelcomeResponse
@@ -55,15 +55,15 @@ func welcomeHandler(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(WelcomeResponse{
 		Name:        "Kasir API",
 		Version:     "2.0.0",
-		Description: "REST API untuk sistem kasir (Point of Sale) - Layered Architecture",
+		Description: "REST API for Point of Sale (POS) system - Layered Architecture",
 		Docs:        "/swagger/index.html",
 		Endpoints: []string{
-			"GET  /health     - Health check",
-			"GET  /produk     - Get all produk",
-			"POST /produk     - Create produk",
-			"GET  /produk/:id - Get produk by ID",
-			"PUT  /produk/:id - Update produk",
-			"DELETE /produk/:id - Delete produk",
+			"GET  /health       - Health check",
+			"GET  /products     - Get all products",
+			"POST /products     - Create product",
+			"GET  /products/:id - Get product by ID",
+			"PUT  /products/:id - Update product",
+			"DELETE /products/:id - Delete product",
 			"GET  /categories     - Get all categories",
 			"POST /categories     - Create category",
 			"GET  /categories/:id - Get category by ID",
@@ -75,7 +75,7 @@ func welcomeHandler(w http.ResponseWriter, r *http.Request) {
 
 // healthHandler godoc
 // @Summary Health check
-// @Description Mengecek apakah API berjalan dengan baik
+// @Description Check if the API is running properly
 // @Tags Health
 // @Produce json
 // @Success 200 {object} HealthResponse
@@ -118,7 +118,7 @@ func main() {
 
 	// Start server
 	port := config.AppConfig.Port
-	fmt.Printf("🚀 Kasir API v2.0 berjalan di http://localhost:%s\n", port)
+	fmt.Printf("🚀 Kasir API v2.0 running at http://localhost:%s\n", port)
 	fmt.Printf("📚 Swagger UI: http://localhost:%s/swagger/index.html\n", port)
 	fmt.Println("📋 Architecture: Layered (Handler → Service → Repository)")
 
@@ -143,8 +143,8 @@ func setupDatabaseRoutes() {
 	// Setup routing
 	http.HandleFunc("/", welcomeHandler)
 	http.HandleFunc("/health", healthHandler)
-	http.HandleFunc("/produk", productHandler.Handler)
-	http.HandleFunc("/produk/", productHandler.Handler)
+	http.HandleFunc("/products", productHandler.Handler)
+	http.HandleFunc("/products/", productHandler.Handler)
 	http.HandleFunc("/categories", categoryHandler.Handler)
 	http.HandleFunc("/categories/", categoryHandler.Handler)
 }
@@ -155,8 +155,8 @@ func setupDemoRoutes() {
 	http.HandleFunc("/health", healthHandler)
 
 	// Demo handlers that return sample data
-	http.HandleFunc("/produk", demoProductHandler)
-	http.HandleFunc("/produk/", demoProductHandler)
+	http.HandleFunc("/products", demoProductHandler)
+	http.HandleFunc("/products/", demoProductHandler)
 	http.HandleFunc("/categories", demoCategoryHandler)
 	http.HandleFunc("/categories/", demoCategoryHandler)
 }
@@ -164,16 +164,16 @@ func setupDemoRoutes() {
 func demoProductHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode([]map[string]interface{}{
-		{"id": 1, "nama": "Kopi Susu", "harga": 15000, "stok": 100, "category_id": 1},
-		{"id": 2, "nama": "Teh Manis", "harga": 8000, "stok": 150, "category_id": 1},
-		{"id": 3, "nama": "Roti Bakar", "harga": 12000, "stok": 50, "category_id": 2},
+		{"id": 1, "name": "Kopi Susu", "price": 15000, "stock": 100, "category_id": 1},
+		{"id": 2, "name": "Teh Manis", "price": 8000, "stock": 150, "category_id": 1},
+		{"id": 3, "name": "Roti Bakar", "price": 12000, "stock": 50, "category_id": 2},
 	})
 }
 
 func demoCategoryHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode([]map[string]interface{}{
-		{"id": 1, "name": "Minuman", "description": "Berbagai jenis minuman"},
-		{"id": 2, "name": "Makanan", "description": "Berbagai jenis makanan"},
+		{"id": 1, "name": "Beverages", "description": "Various drinks"},
+		{"id": 2, "name": "Food", "description": "Various food items"},
 	})
 }

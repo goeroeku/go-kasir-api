@@ -20,12 +20,12 @@ func NewProductHandler(service *services.ProductService) *ProductHandler {
 }
 
 // GetAll godoc
-// @Summary Get all produk
-// @Description Mengambil semua daftar produk
-// @Tags Produk
+// @Summary Get all products
+// @Description Get all products from the database
+// @Tags Products
 // @Produce json
 // @Success 200 {array} models.Product
-// @Router /produk [get]
+// @Router /products [get]
 func (h *ProductHandler) GetAll(w http.ResponseWriter, r *http.Request) {
 	products, err := h.service.GetAll()
 	if err != nil {
@@ -38,14 +38,14 @@ func (h *ProductHandler) GetAll(w http.ResponseWriter, r *http.Request) {
 }
 
 // Create godoc
-// @Summary Create produk
-// @Description Membuat produk baru
-// @Tags Produk
+// @Summary Create product
+// @Description Create a new product
+// @Tags Products
 // @Accept json
 // @Produce json
-// @Param produk body models.ProductRequest true "Data produk"
+// @Param product body models.ProductRequest true "Product data"
 // @Success 201 {object} models.Product
-// @Router /produk [post]
+// @Router /products [post]
 func (h *ProductHandler) Create(w http.ResponseWriter, r *http.Request) {
 	var req models.ProductRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
@@ -65,14 +65,14 @@ func (h *ProductHandler) Create(w http.ResponseWriter, r *http.Request) {
 }
 
 // GetByID godoc
-// @Summary Get produk by ID
-// @Description Mengambil produk berdasarkan ID
-// @Tags Produk
+// @Summary Get product by ID
+// @Description Get a product by its ID
+// @Tags Products
 // @Produce json
-// @Param id path int true "Produk ID"
+// @Param id path int true "Product ID"
 // @Success 200 {object} models.Product
-// @Failure 404 {string} string "Produk tidak ditemukan"
-// @Router /produk/{id} [get]
+// @Failure 404 {string} string "Product not found"
+// @Router /products/{id} [get]
 func (h *ProductHandler) GetByID(w http.ResponseWriter, r *http.Request) {
 	id := extractID(r.URL.Path)
 	if id == 0 {
@@ -82,7 +82,7 @@ func (h *ProductHandler) GetByID(w http.ResponseWriter, r *http.Request) {
 
 	product, err := h.service.GetByID(id)
 	if err != nil {
-		http.Error(w, "Produk tidak ditemukan", http.StatusNotFound)
+		http.Error(w, "Product not found", http.StatusNotFound)
 		return
 	}
 
@@ -91,15 +91,15 @@ func (h *ProductHandler) GetByID(w http.ResponseWriter, r *http.Request) {
 }
 
 // Update godoc
-// @Summary Update produk
-// @Description Mengupdate produk berdasarkan ID
-// @Tags Produk
+// @Summary Update product
+// @Description Update a product by its ID
+// @Tags Products
 // @Accept json
 // @Produce json
-// @Param id path int true "Produk ID"
-// @Param produk body models.ProductRequest true "Data produk"
+// @Param id path int true "Product ID"
+// @Param product body models.ProductRequest true "Product data"
 // @Success 200 {object} models.Product
-// @Router /produk/{id} [put]
+// @Router /products/{id} [put]
 func (h *ProductHandler) Update(w http.ResponseWriter, r *http.Request) {
 	id := extractID(r.URL.Path)
 	if id == 0 {
@@ -115,7 +115,7 @@ func (h *ProductHandler) Update(w http.ResponseWriter, r *http.Request) {
 
 	product, err := h.service.Update(id, req)
 	if err != nil {
-		http.Error(w, "Produk tidak ditemukan", http.StatusNotFound)
+		http.Error(w, "Product not found", http.StatusNotFound)
 		return
 	}
 
@@ -124,13 +124,13 @@ func (h *ProductHandler) Update(w http.ResponseWriter, r *http.Request) {
 }
 
 // Delete godoc
-// @Summary Delete produk
-// @Description Menghapus produk berdasarkan ID
-// @Tags Produk
+// @Summary Delete product
+// @Description Delete a product by its ID
+// @Tags Products
 // @Produce json
-// @Param id path int true "Produk ID"
+// @Param id path int true "Product ID"
 // @Success 200 {object} map[string]string
-// @Router /produk/{id} [delete]
+// @Router /products/{id} [delete]
 func (h *ProductHandler) Delete(w http.ResponseWriter, r *http.Request) {
 	id := extractID(r.URL.Path)
 	if id == 0 {
@@ -139,13 +139,13 @@ func (h *ProductHandler) Delete(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err := h.service.Delete(id); err != nil {
-		http.Error(w, "Produk tidak ditemukan", http.StatusNotFound)
+		http.Error(w, "Product not found", http.StatusNotFound)
 		return
 	}
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(map[string]string{
-		"message": fmt.Sprintf("Produk dengan ID %d berhasil dihapus", id),
+		"message": fmt.Sprintf("Product with ID %d deleted successfully", id),
 	})
 }
 
