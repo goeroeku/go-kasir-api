@@ -17,7 +17,7 @@ const docTemplate = `{
     "paths": {
         "/": {
             "get": {
-                "description": "Menampilkan informasi welcome dan daftar endpoint",
+                "description": "Display welcome information and endpoint list",
                 "produces": [
                     "application/json"
                 ],
@@ -196,7 +196,7 @@ const docTemplate = `{
         },
         "/health": {
             "get": {
-                "description": "Mengecek apakah API berjalan dengan baik",
+                "description": "Check if the API is running properly",
                 "produces": [
                     "application/json"
                 ],
@@ -214,16 +214,16 @@ const docTemplate = `{
                 }
             }
         },
-        "/produk": {
+        "/products": {
             "get": {
-                "description": "Mengambil semua daftar produk",
+                "description": "Get all products from the database",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
-                    "Produk"
+                    "Products"
                 ],
-                "summary": "Get all produk",
+                "summary": "Get all products",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -237,7 +237,7 @@ const docTemplate = `{
                 }
             },
             "post": {
-                "description": "Membuat produk baru",
+                "description": "Create a new product",
                 "consumes": [
                     "application/json"
                 ],
@@ -245,13 +245,13 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Produk"
+                    "Products"
                 ],
-                "summary": "Create produk",
+                "summary": "Create product",
                 "parameters": [
                     {
-                        "description": "Data produk",
-                        "name": "produk",
+                        "description": "Product data",
+                        "name": "product",
                         "in": "body",
                         "required": true,
                         "schema": {
@@ -269,20 +269,20 @@ const docTemplate = `{
                 }
             }
         },
-        "/produk/{id}": {
+        "/products/{id}": {
             "get": {
-                "description": "Mengambil produk berdasarkan ID",
+                "description": "Get a product by its ID",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
-                    "Produk"
+                    "Products"
                 ],
-                "summary": "Get produk by ID",
+                "summary": "Get product by ID",
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Produk ID",
+                        "description": "Product ID",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -296,7 +296,7 @@ const docTemplate = `{
                         }
                     },
                     "404": {
-                        "description": "Produk tidak ditemukan",
+                        "description": "Product not found",
                         "schema": {
                             "type": "string"
                         }
@@ -304,7 +304,7 @@ const docTemplate = `{
                 }
             },
             "put": {
-                "description": "Mengupdate produk berdasarkan ID",
+                "description": "Update a product by its ID",
                 "consumes": [
                     "application/json"
                 ],
@@ -312,20 +312,20 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Produk"
+                    "Products"
                 ],
-                "summary": "Update produk",
+                "summary": "Update product",
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Produk ID",
+                        "description": "Product ID",
                         "name": "id",
                         "in": "path",
                         "required": true
                     },
                     {
-                        "description": "Data produk",
-                        "name": "produk",
+                        "description": "Product data",
+                        "name": "product",
                         "in": "body",
                         "required": true,
                         "schema": {
@@ -343,18 +343,18 @@ const docTemplate = `{
                 }
             },
             "delete": {
-                "description": "Menghapus produk berdasarkan ID",
+                "description": "Delete a product by its ID",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
-                    "Produk"
+                    "Products"
                 ],
-                "summary": "Delete produk",
+                "summary": "Delete product",
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Produk ID",
+                        "description": "Product ID",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -437,16 +437,22 @@ const docTemplate = `{
         "models.Product": {
             "type": "object",
             "properties": {
-                "harga": {
+                "category_id": {
                     "type": "integer"
+                },
+                "category_name": {
+                    "type": "string"
                 },
                 "id": {
                     "type": "integer"
                 },
-                "nama": {
+                "name": {
                     "type": "string"
                 },
-                "stok": {
+                "price": {
+                    "type": "integer"
+                },
+                "stock": {
                     "type": "integer"
                 }
             }
@@ -454,13 +460,16 @@ const docTemplate = `{
         "models.ProductRequest": {
             "type": "object",
             "properties": {
-                "harga": {
+                "category_id": {
                     "type": "integer"
                 },
-                "nama": {
+                "name": {
                     "type": "string"
                 },
-                "stok": {
+                "price": {
+                    "type": "integer"
+                },
+                "stock": {
                     "type": "integer"
                 }
             }
@@ -475,7 +484,7 @@ var SwaggerInfo = &swag.Spec{
 	BasePath:         "/",
 	Schemes:          []string{},
 	Title:            "Kasir API",
-	Description:      "REST API untuk sistem kasir (Point of Sale) dengan Layered Architecture",
+	Description:      "REST API for Point of Sale (POS) system with Layered Architecture",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 	LeftDelim:        "{{",

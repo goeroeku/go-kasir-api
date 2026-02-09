@@ -40,34 +40,40 @@ definitions:
     type: object
   models.Product:
     properties:
-      harga:
+      category_id:
         type: integer
+      category_name:
+        type: string
       id:
         type: integer
-      nama:
+      name:
         type: string
-      stok:
+      price:
+        type: integer
+      stock:
         type: integer
     type: object
   models.ProductRequest:
     properties:
-      harga:
+      category_id:
         type: integer
-      nama:
+      name:
         type: string
-      stok:
+      price:
+        type: integer
+      stock:
         type: integer
     type: object
 host: localhost:8080
 info:
   contact: {}
-  description: REST API untuk sistem kasir (Point of Sale) dengan Layered Architecture
+  description: REST API for Point of Sale (POS) system with Layered Architecture
   title: Kasir API
   version: "2.0"
 paths:
   /:
     get:
-      description: Menampilkan informasi welcome dan daftar endpoint
+      description: Display welcome information and endpoint list
       produces:
       - application/json
       responses:
@@ -185,7 +191,7 @@ paths:
       - Categories
   /health:
     get:
-      description: Mengecek apakah API berjalan dengan baik
+      description: Check if the API is running properly
       produces:
       - application/json
       responses:
@@ -196,9 +202,9 @@ paths:
       summary: Health check
       tags:
       - Health
-  /produk:
+  /products:
     get:
-      description: Mengambil semua daftar produk
+      description: Get all products from the database
       produces:
       - application/json
       responses:
@@ -208,17 +214,17 @@ paths:
             items:
               $ref: '#/definitions/models.Product'
             type: array
-      summary: Get all produk
+      summary: Get all products
       tags:
-      - Produk
+      - Products
     post:
       consumes:
       - application/json
-      description: Membuat produk baru
+      description: Create a new product
       parameters:
-      - description: Data produk
+      - description: Product data
         in: body
-        name: produk
+        name: product
         required: true
         schema:
           $ref: '#/definitions/models.ProductRequest'
@@ -229,14 +235,14 @@ paths:
           description: Created
           schema:
             $ref: '#/definitions/models.Product'
-      summary: Create produk
+      summary: Create product
       tags:
-      - Produk
-  /produk/{id}:
+      - Products
+  /products/{id}:
     delete:
-      description: Menghapus produk berdasarkan ID
+      description: Delete a product by its ID
       parameters:
-      - description: Produk ID
+      - description: Product ID
         in: path
         name: id
         required: true
@@ -250,13 +256,13 @@ paths:
             additionalProperties:
               type: string
             type: object
-      summary: Delete produk
+      summary: Delete product
       tags:
-      - Produk
+      - Products
     get:
-      description: Mengambil produk berdasarkan ID
+      description: Get a product by its ID
       parameters:
-      - description: Produk ID
+      - description: Product ID
         in: path
         name: id
         required: true
@@ -269,25 +275,25 @@ paths:
           schema:
             $ref: '#/definitions/models.Product'
         "404":
-          description: Produk tidak ditemukan
+          description: Product not found
           schema:
             type: string
-      summary: Get produk by ID
+      summary: Get product by ID
       tags:
-      - Produk
+      - Products
     put:
       consumes:
       - application/json
-      description: Mengupdate produk berdasarkan ID
+      description: Update a product by its ID
       parameters:
-      - description: Produk ID
+      - description: Product ID
         in: path
         name: id
         required: true
         type: integer
-      - description: Data produk
+      - description: Product data
         in: body
-        name: produk
+        name: product
         required: true
         schema:
           $ref: '#/definitions/models.ProductRequest'
@@ -298,7 +304,7 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/models.Product'
-      summary: Update produk
+      summary: Update product
       tags:
-      - Produk
+      - Products
 swagger: "2.0"

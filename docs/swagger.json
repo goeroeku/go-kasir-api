@@ -1,7 +1,7 @@
 {
     "swagger": "2.0",
     "info": {
-        "description": "REST API untuk sistem kasir (Point of Sale) dengan Layered Architecture",
+        "description": "REST API for Point of Sale (POS) system with Layered Architecture",
         "title": "Kasir API",
         "contact": {},
         "version": "2.0"
@@ -11,7 +11,7 @@
     "paths": {
         "/": {
             "get": {
-                "description": "Menampilkan informasi welcome dan daftar endpoint",
+                "description": "Display welcome information and endpoint list",
                 "produces": [
                     "application/json"
                 ],
@@ -190,7 +190,7 @@
         },
         "/health": {
             "get": {
-                "description": "Mengecek apakah API berjalan dengan baik",
+                "description": "Check if the API is running properly",
                 "produces": [
                     "application/json"
                 ],
@@ -208,16 +208,16 @@
                 }
             }
         },
-        "/produk": {
+        "/products": {
             "get": {
-                "description": "Mengambil semua daftar produk",
+                "description": "Get all products from the database",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
-                    "Produk"
+                    "Products"
                 ],
-                "summary": "Get all produk",
+                "summary": "Get all products",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -231,7 +231,7 @@
                 }
             },
             "post": {
-                "description": "Membuat produk baru",
+                "description": "Create a new product",
                 "consumes": [
                     "application/json"
                 ],
@@ -239,13 +239,13 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Produk"
+                    "Products"
                 ],
-                "summary": "Create produk",
+                "summary": "Create product",
                 "parameters": [
                     {
-                        "description": "Data produk",
-                        "name": "produk",
+                        "description": "Product data",
+                        "name": "product",
                         "in": "body",
                         "required": true,
                         "schema": {
@@ -263,20 +263,20 @@
                 }
             }
         },
-        "/produk/{id}": {
+        "/products/{id}": {
             "get": {
-                "description": "Mengambil produk berdasarkan ID",
+                "description": "Get a product by its ID",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
-                    "Produk"
+                    "Products"
                 ],
-                "summary": "Get produk by ID",
+                "summary": "Get product by ID",
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Produk ID",
+                        "description": "Product ID",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -290,7 +290,7 @@
                         }
                     },
                     "404": {
-                        "description": "Produk tidak ditemukan",
+                        "description": "Product not found",
                         "schema": {
                             "type": "string"
                         }
@@ -298,7 +298,7 @@
                 }
             },
             "put": {
-                "description": "Mengupdate produk berdasarkan ID",
+                "description": "Update a product by its ID",
                 "consumes": [
                     "application/json"
                 ],
@@ -306,20 +306,20 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Produk"
+                    "Products"
                 ],
-                "summary": "Update produk",
+                "summary": "Update product",
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Produk ID",
+                        "description": "Product ID",
                         "name": "id",
                         "in": "path",
                         "required": true
                     },
                     {
-                        "description": "Data produk",
-                        "name": "produk",
+                        "description": "Product data",
+                        "name": "product",
                         "in": "body",
                         "required": true,
                         "schema": {
@@ -337,18 +337,18 @@
                 }
             },
             "delete": {
-                "description": "Menghapus produk berdasarkan ID",
+                "description": "Delete a product by its ID",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
-                    "Produk"
+                    "Products"
                 ],
-                "summary": "Delete produk",
+                "summary": "Delete product",
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Produk ID",
+                        "description": "Product ID",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -431,16 +431,22 @@
         "models.Product": {
             "type": "object",
             "properties": {
-                "harga": {
+                "category_id": {
                     "type": "integer"
+                },
+                "category_name": {
+                    "type": "string"
                 },
                 "id": {
                     "type": "integer"
                 },
-                "nama": {
+                "name": {
                     "type": "string"
                 },
-                "stok": {
+                "price": {
+                    "type": "integer"
+                },
+                "stock": {
                     "type": "integer"
                 }
             }
@@ -448,13 +454,16 @@
         "models.ProductRequest": {
             "type": "object",
             "properties": {
-                "harga": {
+                "category_id": {
                     "type": "integer"
                 },
-                "nama": {
+                "name": {
                     "type": "string"
                 },
-                "stok": {
+                "price": {
+                    "type": "integer"
+                },
+                "stock": {
                     "type": "integer"
                 }
             }

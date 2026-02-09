@@ -1,10 +1,10 @@
 # Kasir API
 
-REST API untuk sistem kasir (Point of Sale) menggunakan Go dengan Layered Architecture.
+REST API for Point of Sale (POS) system using Go with Layered Architecture.
 
 ## 🛠️ Tech Stack
 
-- **Bahasa**: Go (Golang) 1.24+
+- **Language**: Go (Golang) 1.24+
 - **Database**: PostgreSQL (Supabase)
 - **Driver**: pgx/v5
 - **Config**: Viper
@@ -69,7 +69,7 @@ go mod tidy
 go run main.go
 ```
 
-Server akan berjalan di `http://localhost:8080`
+Server will run at `http://localhost:8080`
 
 ## ⚙️ Environment Variables
 
@@ -85,43 +85,43 @@ Swagger UI: `http://localhost:8080/swagger/index.html`
 ## 📋 API Endpoints
 
 ### Health Check
-| Method | Endpoint | Deskripsi |
-|--------|----------|-----------|
+| Method | Endpoint | Description |
+|--------|----------|-------------|
 | GET | `/` | API info |
 | GET | `/health` | Health check |
 
-### Produk
-| Method | Endpoint | Deskripsi |
-|--------|----------|-----------|
-| GET | `/produk` | Get semua produk |
-| POST | `/produk` | Create produk baru |
-| GET | `/produk/:id` | Get produk by ID |
-| PUT | `/produk/:id` | Update produk |
-| DELETE | `/produk/:id` | Delete produk |
+### Products
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/products` | Get all products |
+| POST | `/products` | Create new product |
+| GET | `/products/:id` | Get product by ID |
+| PUT | `/products/:id` | Update product |
+| DELETE | `/products/:id` | Delete product |
 
 ### Categories
-| Method | Endpoint | Deskripsi |
-|--------|----------|-----------|
-| GET | `/categories` | Get semua kategori |
-| POST | `/categories` | Create kategori baru |
-| GET | `/categories/:id` | Get kategori by ID |
-| PUT | `/categories/:id` | Update kategori |
-| DELETE | `/categories/:id` | Delete kategori |
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/categories` | Get all categories |
+| POST | `/categories` | Create new category |
+| GET | `/categories/:id` | Get category by ID |
+| PUT | `/categories/:id` | Update category |
+| DELETE | `/categories/:id` | Delete category |
 
-## 📝 Contoh Request
+## 📝 Example Requests
 
-### Create Produk
+### Create Product
 ```bash
-curl -X POST http://localhost:8080/produk \
+curl -X POST http://localhost:8080/products \
   -H "Content-Type: application/json" \
-  -d '{"nama":"Kopi Susu","harga":15000,"stok":100,"category_id":1}'
+  -d '{"name":"Kopi Susu","price":15000,"stock":100,"category_id":1}'
 ```
 
 ### Create Category
 ```bash
 curl -X POST http://localhost:8080/categories \
   -H "Content-Type: application/json" \
-  -d '{"name":"Minuman","description":"Berbagai jenis minuman"}'
+  -d '{"name":"Beverages","description":"Various drinks"}'
 ```
 
 ## 🏗️ Architecture
@@ -148,14 +148,34 @@ curl -X POST http://localhost:8080/categories \
 └─────────────┘
 ```
 
+## 🗄️ Database Schema
+
+```sql
+-- Categories table
+CREATE TABLE categories (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    description TEXT
+);
+
+-- Products table
+CREATE TABLE products (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    price INTEGER NOT NULL,
+    stock INTEGER NOT NULL,
+    category_id INTEGER REFERENCES categories(id)
+);
+```
+
 ## 🔗 Deployment
 
-Deploy ke Railway atau platform lain yang mendukung Go.
+Deploy to Railway or any platform that supports Go.
 
 ### Railway
-1. Connect repository ke Railway
+1. Connect repository to Railway
 2. Set environment variables (`PORT`, `DB_CONN`)
-3. Deploy otomatis
+3. Automatic deployment
 
 ## 📄 License
 
