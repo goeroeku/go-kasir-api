@@ -166,6 +166,22 @@ CREATE TABLE products (
     stock INTEGER NOT NULL,
     category_id INTEGER REFERENCES categories(id)
 );
+
+-- Transactions table
+CREATE TABLE transactions (
+    id SERIAL PRIMARY KEY,
+    total_amount INTEGER NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Transaction Details table
+CREATE TABLE transaction_details (
+    id SERIAL PRIMARY KEY,
+    transaction_id INTEGER REFERENCES transactions(id) ON DELETE CASCADE,
+    product_id INTEGER REFERENCES products(id),
+    quantity INTEGER NOT NULL,
+    subtotal INTEGER NOT NULL
+);
 ```
 
 ## 🔗 Deployment
