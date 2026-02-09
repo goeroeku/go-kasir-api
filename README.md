@@ -108,6 +108,17 @@ Swagger UI: `http://localhost:8080/swagger/index.html`
 | PUT | `/categories/:id` | Update category |
 | DELETE | `/categories/:id` | Delete category |
 
+### Transactions
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/transactions` | Create new transaction (checkout) |
+
+### Reports
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/reports/today` | Get sales report for today |
+| GET | `/reports` | Get sales report with custom date (query: `start_date`, `end_date`) |
+
 ## 📝 Example Requests
 
 ### Create Product
@@ -122,6 +133,27 @@ curl -X POST http://localhost:8080/products \
 curl -X POST http://localhost:8080/categories \
   -H "Content-Type: application/json" \
   -d '{"name":"Beverages","description":"Various drinks"}'
+```
+
+### Create Transaction (Checkout)
+```bash
+curl -X POST http://localhost:8080/transactions \
+  -H "Content-Type: application/json" \
+  -d '{
+    "items": [
+        {"product_id": 1, "quantity": 2},
+        {"product_id": 2, "quantity": 1}
+    ]
+  }'
+```
+
+### Get Report
+```bash
+# Today
+curl http://localhost:8080/reports/today
+
+# Custom Date Range
+curl "http://localhost:8080/reports?start_date=2024-01-01&end_date=2024-12-31"
 ```
 
 ## 🏗️ Architecture
