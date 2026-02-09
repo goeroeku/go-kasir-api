@@ -69,6 +69,9 @@ func welcomeHandler(w http.ResponseWriter, r *http.Request) {
 			"GET  /categories/:id - Get category by ID",
 			"PUT  /categories/:id - Update category",
 			"DELETE /categories/:id - Delete category",
+			"POST /transactions   - Create transaction (checkout)",
+			"GET  /reports/today  - Get sales report for today",
+			"GET  /reports        - Get sales report with custom date",
 		},
 	})
 }
